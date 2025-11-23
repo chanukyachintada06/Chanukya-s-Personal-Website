@@ -395,6 +395,98 @@ footer {
     padding-top: 15px;
     width: 80%;
 }
+
+/* --- EDUCATION SECTION STYLES --- */
+.education-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.edu-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    border-left: 5px solid #3498db; /* Blue accent line on the left */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.edu-card:hover {
+    transform: translateX(5px); /* Slide slightly right on hover */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.edu-content h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.3rem;
+}
+
+/* Hyperlink Styling */
+.edu-content h3 a {
+    text-decoration: none;
+    color: #2c3e50;
+    transition: color 0.3s;
+}
+
+.edu-content h3 a:hover {
+    color: #3498db; /* Turns blue on hover */
+    text-decoration: underline;
+}
+
+.degree {
+    font-weight: bold;
+    color: #555;
+    margin: 5px 0;
+    font-size: 1rem;
+}
+
+.edu-year {
+    display: inline-block;
+    background-color: #eaf2f8; /* Light blue pill background */
+    color: #3498db;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.grade {
+    font-style: italic;
+    color: #777;
+    margin: 5px 0 0 0;
+}
+
+/* --- DARK MODE SUPPORT --- */
+body.dark-mode .edu-card {
+    background: #2a2a3e; /* Dark card background */
+    border: 1px solid #444;
+    border-left: 5px solid #3498db; /* Keep the accent */
+    box-shadow: none;
+}
+
+body.dark-mode .edu-content h3 a {
+    color: #fff; /* White text in dark mode */
+}
+body.dark-mode .edu-content h3 a:hover {
+    color: #3498db;
+}
+
+body.dark-mode .degree {
+    color: #ccc;
+}
+
+body.dark-mode .edu-year {
+    background-color: #3e3e5a;
+    color: #81c9f9;
+}
+
+body.dark-mode .grade {
+    color: #aaa;
+}
     </style>
 </head>
 <body>
@@ -593,6 +685,41 @@ footer {
 </div>
         </section>
 
+		<section id="education" class="section">
+    <div class="container">
+        <h2>Education</h2>
+        <div class="education-wrapper">
+            
+            <div class="edu-card">
+                <div class="edu-content">
+                    <h3><a href="https://www.lpu.in/" target="_blank">Lovely Professional University</a></h3>
+                    <p class="degree">Bachelor of Technology - BTech, Computer Science</p>
+                    <span class="edu-year">2023 - 2027</span>
+                    <p class="grade">Grade: 5th Sem</p>
+                </div>
+            </div>
+
+            <div class="edu-card">
+                <div class="edu-content">
+                    <h3><a href="https://srichaitanya.net/" target="_blank">Sri Chaitanya College of Education</a></h3>
+                    <p class="degree">Intermediate</p>
+                    <span class="edu-year">Sep 2021 - Mar 2023</span>
+                </div>
+            </div>
+
+            <div class="edu-card">
+                <div class="edu-content">
+                    <h3><a href="https://www.gayatrischool.edu.in/" target="_blank">GURAJADA COLLEGE OF EDUCATION</a></h3>
+                    <p class="degree">10th Standard</p>
+                    <span class="edu-year">Jun 2019 - Jul 2021</span>
+                    <p class="grade">Grade: 95%</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
         <section id="contact" class="section">
             <div class="container">
                 <h2>Contact Me</h2>
@@ -747,3 +874,4 @@ footer {
 </body>
 
 </html>
+
