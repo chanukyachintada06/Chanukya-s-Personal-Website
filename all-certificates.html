@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Certificates</title>
+    <style>
+        /* --- CSS STYLES START HERE --- */
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f8;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header Styling */
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header-line {
+            width: 100%;
+            height: 2px;
+            background-color: #3498db; /* Blue line */
+            margin-bottom: 40px;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .back-btn:hover { text-decoration: underline; }
+
+        /* Grid Layout */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Forces 3 columns */
+            gap: 40px; /* Space between items */
+            justify-items: center; /* Centers items in their cells */
+        }
+
+        /* Card Styling */
+        .cert-card {
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .cert-card:hover {
+            transform: translateY(-5px); /* Slight lift on hover */
+        }
+
+        .cert-card img {
+            width: 100%;
+            height: 180px; /* Fixed height for uniformity */
+            object-fit: cover; /* Ensures image fills box */
+            border: 2px solid #333;
+            border-radius: 5px;
+            background-color: #ddd; /* Grey placeholder background */
+            display: block;
+            margin: 0 auto;
+        }
+
+        .cert-card p {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        /* --- MODAL (POPUP) STYLES --- */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 800px;
+            padding: 30px;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            gap: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .modal-left { flex: 1; }
+        .modal-left img {
+            width: 100%;
+            border: 4px solid #000;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .modal-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-right h3 {
+            margin-top: 0;
+            font-style: italic;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .modal-right p {
+            font-style: italic;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #aaa;
+        }
+        .close-btn:hover { color: #000; }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .cert-grid { grid-template-columns: 1fr; } /* 1 column on phone */
+            .modal-content { flex-direction: column; }
+        }
+        /* Footer Container */
+footer {
+    position: relative; /* Allows us to pin the form to the corner */
+    background-color: #f4f6f8; /* Matches your background */
+    border-top: 2px solid #3498db; /* Adds a nice blue line at the top */
+    padding: 20px;
+    height: 120px; /* Fixed height to ensure room for the form */
+    display: flex;
+    justify-content: center; /* Horizontally centers the copyright text */
+    align-items: flex-end; /* Aligns copyright text to the bottom */
+}
+
+/* The Copyright Text */
+.copyright-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px; /* Spacing from the very bottom edge */
+}
+
+/* The Report Form Container */
+.footer-form-wrapper {
+    position: absolute; /* Takes it out of the normal flow */
+    left: 20px;
+    bottom: 20px;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 250px;
+}
+
+.form-title {
+    margin: 0 0 5px 0;
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: bold;
+}
+
+.mini-form {
+    display: flex;
+    gap: 5px;
+}
+
+.mini-form input {
+    flex: 1; /* Input takes available space */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.mini-form button {
+    padding: 5px 10px;
+    background-color: #e74c3c; /* Red color for "Report" */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.mini-form button:hover {
+    background-color: #c0392b;
+}
+
+/* MOBILE RESPONSIVENESS */
+/* On phones, we stack them instead of using absolute positioning */
+@media (max-width: 768px) {
+    footer {
+        height: auto;
+        flex-direction: column-reverse; /* Put text below, form above */
+        align-items: center;
+        gap: 20px;
+    }
+
+    .footer-form-wrapper {
+        position: static; /* Removes absolute positioning */
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .copyright-text {
+        margin-bottom: 0;
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-btn">&larr; Back to Home</a>
+    
+    <h1>My Certificates</h1>
+    <div class="header-line"></div>
+    <h3>Programming:</h3>
+    <div class="cert-grid">
+    
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Responsive Web Design | FreecodeCamp"
+             data-desc="This certification represents approximately 300 hours of coursework focused on building modern, mobile-friendly websites. I've mastered HTML5 for semantic structure and CSS3 for styling, while learning responsive design principles using Flexbox and CSS Grid. The course required building multiple portfolio projects to demonstrate proficiency in creating accessible web interfaces."
+             data-link="https://freecodecamp.org/certification/fccf0443ac1-b58f-4ab1-b5df-9f0ff76251c3/responsive-web-design">
+             <img src="Responsive Web Design freeCodeCamp-1.png" alt="Cert 1">
+             <p>Responsive Web Design</p>
+        </div>
+
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Computer Programming | IamNeo & Lovely Professional University"
+             data-desc="This 72-hour intensive course provided a comprehensive introduction to the logic and syntax of computer programming. It covered the fundamentals of writing code, compiling, and debugging, likely utilizing a foundational language like C. I've learned to solve computational problems by breaking them down into logical steps and implementing them via algorithms."
+             data-link="https://coursera.org/verification">
+             <img src="C CSE101 certificate-1.png" alt="Cert 2">
+             <p>Computer Programming (C) </p>
+        </div>
+
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Object Oriented Programming | IamNeo & Lovely Professional University"
+             data-desc="Spanning 72 hours, this course focused on the paradigm of Object-Oriented Programming (OOP). I've learned to design software using classes and objects, mastering key concepts such as inheritance, polymorphism, encapsulation, and abstraction. These skills are essential for building scalable and maintainable software applications."
+             data-link="https://cisco.com/verification">
+             <img src="C++ CSE202 certificate-1.png" alt="Cert 3">
+             <p>Object Oriented Programming (C++)</p>
+        </div>
+
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Data Structures and Algorithm(DSA) | IamNeo & Lovely Professional University"
+             data-desc="This 72-hour course focused on the efficient organization and manipulation of data. I've learned about critical data structures (such as arrays, linked lists, stacks, queues, and trees) and the algorithms used to process them (sorting, searching, and graph traversal). This knowledge is critical for optimizing code performance and solving complex engineering problems."
+             data-link="https://linux.org/verification">
+             <img src="DSA CSE205 certificate-1.png" alt="Cert 4">
+             <p>Data Structures and Algorithm (DSA)</p>
+        </div>
+
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Java Programming | IamNeo & Lovely Professional University"
+             data-desc="This course involved 72 hours of training dedicated specifically to the Java programming language. It covered Java syntax, the Java Virtual Machine (JVM) environment, and application development. I've gained experience in writing cross-platform code and utilizing Java's extensive standard libraries for various computing tasks."
+             data-link="https://eccouncil.org/verification">
+             <img src="Java Programming Certificate-1.png" alt="Cert 5">
+             <p>Java Programming</p>
+        </div>
+    </div>
+    <h3>Cybersecurity & Cloud</h3>
+    <div class="cert-grid">
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Cloud Computing | NPTEL"
+             data-desc="This 12-week course from IIT Kharagpur covered the theoretical and practical aspects of cloud computing. I've learned about different cloud service models (IaaS, PaaS, SaaS), virtualization technologies, and distributed computing. The course included assignments and a proctored exam to validate your understanding of cloud architecture and deployment."
+             data-link="https://archive.nptel.ac.in/noc/Ecertificate/?q=NPTEL25CS11S133730064104232792">
+             <img src="NPTEL - Cloud Computing May 2025_page-0001.jpg" alt="Cert 6">
+             <p>Cloud Computing (NPTEL)</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Cyber Security Associate Certification Programme | Skill India & Reliance Foundation "
+             data-desc="This extensive 180-hour program provided rigorous training in cybersecurity defense and operations. Offered by Reliance Foundation Skilling Academy, it covered threat analysis, network security protocols, and incident response. I've gained the skills necessary to identify vulnerabilities and protect digital infrastructure in a professional environment."
+             data-link="https://skill-india-dev.s3.ap-south-1.amazonaws.com/certificate_generic/uploaded_elements/2025072857369207/certificate_8fa92baf-c18b-40cb-a124-d53da1f15744.pdf?response-content-disposition=inline&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20251123T043742Z&X-Amz-SignedHeaders=host&X-Amz-Expires=2000&X-Amz-Credential=AKIA3OJCFBJTPLAN4OGU%2F20251123%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a1d33933f6bd25476c518eecbdd43341016817d90c46b88a2d40d0231580e1fe">
+             <img src="Reliance Foundation - Cyber Security Associate Certification Programme - Skill India_page-0001.jpg" alt="Cert 6">
+             <p>Cyber Security Associate Certification Programme (Reliance Foundation)</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Cybersecurity | Skill India & Tech Mahindra Foundation "
+             data-desc="This 10-hour participation course provided a quick but focused overview of the cybersecurity landscape. It introduced key concepts in information security and the importance of digital protection in the modern world. It served as a preliminary step into the broader field of cyber defense."
+             data-link="https://oracle.com/verification">
+             <img src="Tech Mahindra Foundation_page-0001.jpg" alt="Cert 6">
+             <p>Cybersecurity (Tech Mahindra Foundation)</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Introducing Cybersecurity | SAP "
+             data-desc="This certification validates that you understand basic cybersecurity skills and the purpose of various security areas. It covered the roles within cybersecurity teams and the skills needed to enter the field. I've learned how to describe the importance of protecting digital assets and the fundamentals of security frameworks."
+             data-link="https://www.credly.com/badges/b2bdb8c0-9496-4c59-b7b7-2eb2641df1f3">
+             <img src="SAP - Introducing Cybersecurity - Record of Achievement-1.png" alt="Cert 6">
+             <p>Introducing Cybersecurity (SAP)</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Introduction to Cybersecurity Awareness | HP LIFE "
+             data-desc="By completing this course, I've learned about common cybersecurity threats and discovered basic ways to keep online data and information more secure. The curriculum focused on personal and small business digital hygiene, teaching you how to recognize phishing, malware, and other social engineering attacks."
+             data-link="https://oracle.com/verification">
+             <img src="HP - Introduction to Cybersecurity Awareness-1.png" alt="Cert 6">
+             <p>Introduction to Cybersecurity Awareness (HP LIFE)</p>
+        </div>
+    </div>
+    <h3>Lovely Professional University (LPU) & Red Hat </h3>
+    <div class="cert-grid">
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="RHCSA Summer Training Mastering Linux System Administration"
+             data-desc="Core concepts of Oracle Cloud Infrastructure services."
+             data-link="https://oracle.com/verification">
+             <img src="CPE RHCSA Summer Training Mastering Linux System Administration-1.png" alt="Cert 6">
+             <p>RHCSA Summer Training Mastering Linux System Administration (Summer Training)</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Red Hat System Administration I RH124 | Red Hat"
+             data-desc="This 40-hour course provided a foundation in Red Hat Enterprise Linux (RHEL) administration. It focused on essential command-line concepts, physical storage management, and the installation and configuration of software components. I've learned the core skills necessary to manage a Linux workstation and perform basic system maintenance."
+             data-link="https://www.credly.com/badges/3df2f837-43af-4446-9d75-d615b5425f12/">
+             <img src="RH124-1.png" alt="Cert 6">
+             <p>Red Hat System Administration I (RH124)</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Red Hat System Administration II (RH134) | Red Hat"
+             data-desc="Building on the foundations of RH124, this 40-hour course covered advanced system administration tasks in Red Hat Enterprise Linux. I've learned about security controls (including SELinux), advanced storage partition management, and file system configuration. The training prepared you for real-world scenarios in managing and securing Linux enterprise environments"
+             data-link=https://www.credly.com/badges/a201595b-5d4f-4148-b0b0-a7d4a5a05df8/">
+             <img src="RH134-1.png" alt="Cert 6">
+             <p>Red Hat System Administration II (RH134)</p>
+        </div>
+    </div>
+    <h3>Coursera</h3>
+    <div class="cert-grid">
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="The Bits and Bytes of Computer Networking | Coursera & Google"
+             data-desc="This foundational course provided a full overview of computer networking, from the physical layer to the application layer. I've learned about the five-layer network model, the standard protocols used in TCP/IP communications, and essential network services like DNS and DHCP. It is designed to provide the practical networking knowledge needed for IT support roles."
+             data-link="https://www.coursera.org/account/accomplishments/verify/O4M3XVIQBS0X">
+             <img src="The Bits and Bytes of Computer Networking Coursera.png" alt="Cert 6">
+             <p>The Bits and Bytes of Computer Networking (Google)</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="TCP- IP and Advanced Topics | Coursera & University of Colorado"
+             data-desc="By completing this course, I’ve gained advanced knowledge of the TCP/IP protocol suite, including how transport-layer reliability, congestion control, and flow control are achieved. I’ve learned about IPv4 & IPv6, socket programming basics, reliable data transfer mechanisms, and end-to-end connection management. The course strengthened my practical understanding of how the internet’s backbone protocols operate in real-world scenarios."
+             data-link="https://www.coursera.org/account/accomplishments/verify/OY3BIPORIZ9M">
+             <img src="TCP- IP and Advanced Topics Coursera.png" alt="Cert 6">
+             <p>TCP- IP and Advanced Topics</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Peer-to-Peer Protocols and Local Area Networks | Coursera & University of Colorado"
+             data-desc="Through this course, I’ve gained knowledge about how peer-to-peer (P2P) systems operate and how devices communicate directly without centralized servers. I’ve learned about LAN topologies, MAC protocols, Ethernet standards, switching, collision domains, and methods to increase efficiency in local networks. The course also strengthened my understanding of how modern P2P applications like torrents and distributed systems manage data exchange."
+             data-link="https://www.coursera.org/account/accomplishments/verify/1075AW5EMN7N">
+             <img src="Peer-to-Peer Protocols and Local Area Networks Coursera.png" alt="Cert 6">
+             <p>Peer-to-Peer Protocols and Local Area Networks</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Packet Switching Networks and Algorithms | Coursera & University of Colorado"
+             data-desc="In this course, I’ve learned how packet-switched networks function, including routing, congestion control, queueing theory, and packet scheduling. I’ve gained clarity on how routers forward packets, how routing algorithms (like Dijkstra, Bellman-Ford) operate, and how networks ensure end-to-end performance. This course significantly improved my conceptual understanding of how the internet scales efficiently using packet-based communication."
+             data-link="https://www.coursera.org/account/accomplishments/verify/906G066Z88JY">
+             <img src="Packet Switching Networks and Algorithms Coursera.png" alt="Cert 6">
+             <p>Packet Switching Networks and Algorithms</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Fundamentals of Network Communication | Coursera & University of Colorado"
+             data-desc="In this course, I’ve learned the core principles of computer networks, including how data travels across different devices and how communication is established between systems. I’ve gained a strong understanding of encoding, modulation, error detection, transmission mediums, and basic network models. This course also helped me build a clear foundation in how networking hardware and protocols work together to make communication reliable and efficient."
+             data-link="https://www.coursera.org/account/accomplishments/verify/PAYHRS7FW5RY">
+             <img src="Fundamentals of Network Communication Coursera.png" alt="Cert 6">
+             <p>Fundamentals of Network Communication</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Computer Communications | Coursera & University of Colorado"
+             data-desc="This specialization allowed me to develop a complete understanding of computer networking from fundamentals to advanced concepts. I’ve learned how network architectures are designed, how communication protocols operate across layers, and how data is transmitted efficiently through packet-switched networks. I’ve also gained strong insights into TCP/IP mechanisms, P2P networking, routing algorithms, error control, LAN technologies, and the overall inner workings of internet communication.
+Overall, this specialization helped me build a solid foundation required for cybersecurity, SOC operations, and advanced networking roles."
+             data-link="https://www.coursera.org/account/accomplishments/specialization/3LPGYM5SKZQW">
+             <img src="Computer Communications Certificate Coursera.png" alt="Cert 6">
+             <p>Computer Communications</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Introduction to Hardware and Operating Systems | Coursera & IBM"
+             data-desc="This course introduced the core components of computer hardware and the fundamentals of operating systems. I've learned to identify system parts, understand how software interacts with hardware, and perform basic OS management tasks. It provided the essential technical vocabulary and diagnostic skills required for entry-level technical support."
+             data-link="https://www.coursera.org/account/accomplishments/verify/NJ6I6KDJ1WZV">
+             <img src="Introduction to Hardware and Operating Systems Coursera_page-0001.jpg" alt="Cert 6">
+             <p>Introduction to Hardware and Operating Systems</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Digital Systems From Logic Gates to Processors | Coursera & Universitat Autònoma de Barcelona (UAB)"
+             data-desc="This engineering course bridged the gap between simple electronics and complex computing. It covered digital logic design, including Boolean algebra and the operation of logic gates. You learned how to combine these elements to create circuits, eventually leading to the design of functional processors and understanding how computers process binary information."
+             data-link="https://www.coursera.org/account/accomplishments/verify/QB26DYBA9HY9">
+             <img src="Digital Systems From Logic Gates to Processors Coursera_page-0001.jpg" alt="Cert 6">
+             <p>Digital Systems From Logic Gates to Processors</p>
+        </div>
+    </div>
+
+    <h3>Infosys & Udemy (AI & Generative Tools)</h3>
+    <div class="cert-grid">
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="ChatGPT-4 Prompt Engineering: ChatGPT, Generative AI & LLM | Infosys"
+             data-desc="In this course, I’ve learned how modern LLMs like ChatGPT-4 work and how to design effective prompts for high-quality outputs. I’ve gained hands-on experience with prompt patterns, structured prompting, reasoning prompts, and AI-assisted workflows. The course also enhanced my understanding of generative AI applications, limitations, ethical use, and practical deployment in real scenarios."
+             data-link="https://verify.onwingspan.com">
+             <img src= "Infosys-ChatGPT-4 Prompt Engineering ChatGPT, Generative AI & LLM Certificate_page-0001.jpg" alt="Cert 6">
+             <p>ChatGPT-4 Prompt Engineering: ChatGPT, Generative AI & LLM</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Computational Theory: Language Principle & Finite Automata Theory | Infosys & Udemy"
+             data-desc="In this course, I’ve learned the theoretical foundations of computation, including formal languages, grammars, and automata. I’ve gained an understanding of deterministic and non-deterministic finite automata, regular expressions, and language recognition. This course strengthened my theoretical background essential for compiler design, algorithmic problem-solving, and computational abstraction."
+             data-link="https://verify.onwingspan.com">
+             <img src="Infosys-Computational Theory Language Principle & Finite Automata Theory Certificates_page-0001.jpg" alt="Cert 6">
+             <p>Computational Theory: Language Principle & Finite Automata Theory</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Build Generative AI Apps and Solutions with No-Code Tools | Infosys & Udemy"
+             data-desc="In this course, I’ve learned how to build complete AI applications without traditional coding. I’ve gained hands-on experience with no-code platforms that allow rapid development of generative AI workflows, chatbots, automation pipelines, and business solutions. I’ve also explored prompt design, data handling, integrations, and deployment techniques that make AI applications scalable and practical for real-world use."
+             data-link="https://www.udemy.com/certificate/UC-410d51e8-e2da-4e3d-adf8-cb5daf86c5b9/">
+             <img src="Udemy-Build Generative AI Apps and Solutions with No-Code Tool-1.png" alt="Cert 6">
+             <p>Build Generative AI Apps and Solutions with No-Code Tools</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="ChatGPT Made Easy: AI Essentials for Beginners | Infosys & Udemy"
+             data-desc="In this beginner-friendly course, I’ve learned the fundamentals of AI, ChatGPT, and conversational models. I’ve gained clarity on how large language models work, how to generate meaningful responses, and how to use AI tools for productivity, research, writing, and automation. The course helped me understand practical prompting strategies and real-world applications of ChatGPT."
+             data-link="https://www.udemy.com/certificate/UC-784540cc-853f-41d2-8daa-7adf50a7243b/">
+             <img src="Udemy-ChatGPT Made Easy Al Essentials for Beginners-1.png" alt="Cert 6">
+             <p>ChatGPT Made Easy: AI Essentials for Beginners</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Master Generative AI & Generative AI Tools (ChatGPT & More) | Infosys & Udemy"
+             data-desc="This course helped me deepen my understanding of generative AI tools, including ChatGPT and other advanced AI platforms. I’ve learned how to create complex prompts, automate workflows, analyze data using AI, and build AI-powered solutions for different business needs. I’ve gained practical experience in using AI tools for text generation, summarization, research, content creation, and productivity enhancement."
+             data-link="https://springboard.udemy.com/certificate/UC-c91f860e-09f7-4412-83b0-c7319b76d1e2/">
+             <img src="Udemy-Master Generative Al & Generative Al tools (ChatGPT & more)-1.png" alt="Cert 6">
+             <p>Master Generative AI & Generative AI Tools (ChatGPT & More)</p>
+        </div>
+    </div>
+
+    <h3>Workshops/Hacktons</h3>
+    <div class="cert-grid">
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="Certificate of Appreciation | Intellect Nexus"
+             data-desc="Through this event, I’ve gained valuable exposure to industry trends, interview preparation strategies, and the latest advancements in the IT sector. I’ve learned how industry expectations align with academic learning and how competitive awareness sessions help in building professional readiness. Contributing to “Intellect Nexus: A Competitive Event on Industry Awareness, Interview Preparation and IT Trends” allowed me to sharpen my communication, teamwork, and event collaboration skills."
+             data-link="https://credsverse.com/credentials/9653dba1-7ac1-4a59-a208-dfd266bff7cf">
+             <img src="Infineon - Intellect Nexus A company event on Industry Awareness, Interview prepration and IT trend-1.png" alt="Cert 6">
+             <p>Certificate of Appreciation – Intellect Nexus</p>
+        </div>
+        <div class="cert-card" 
+             onclick="openModal(this)" 
+             data-title="OC++ Zero to Hero (5 Days) | LetsUpgrade"
+             data-desc="In this intensive 5-day program, I’ve learned the fundamentals of C++ programming and gained hands-on experience with writing efficient, structured code. I’ve understood essential concepts such as variables, loops, functions, OOP principles, and basic problem-solving using C++. This course helped me build a strong foundation that supports my understanding of system-level programming and competitive coding practices."
+             data-link="https://verify.letsupgrade.in/certificate/LUECPPOCT123184">
+             <img src="Lets Up Grade - C++ Zero to Hero-1.png" alt="Cert 6">
+             <p>C++ Zero to Hero (5 Days) – LetsUpgrade</p>
+        </div>
+    </div>
+</div>
+
+<div id="certModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        
+        <div class="modal-left">
+            <img id="modal-img" src="" alt="Certificate">
+        </div>
+
+        <div class="modal-right">
+            <h3>About</h3>
+            <p id="modal-desc"></p>
+            <p><strong>Certificate Name:</strong> <span id="modal-title"></span></p>
+            <p><strong>Verify:</strong> <a id="modal-link" href="#" target="_blank">Click here to verify</a></p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-form-wrapper">
+    <p class="form-title">Found a mistake?</p>
+    
+    <form id="report-form" action="https://formspree.io/f/movbydve" method="POST" class="mini-form">
+        <input type="text" name="issue" placeholder="Describe the issue..." required>
+        <button type="submit">Report</button>
+    </form>
+
+    <p id="report-message" style="display: none; color: green; font-weight: bold; font-size: 0.9rem; margin: 0;">
+        Thanks for reporting! &#10004;
+    </p>
+</div>
+    <div class="copyright-text">
+        Chanukya Chintada &copy; 2025
+    </div>
+</footer>
+
+<script>
+    function openModal(element) {
+        var modal = document.getElementById("certModal");
+        
+        // Get data from the clicked card
+        var imgParams = element.querySelector("img").src;
+        var title = element.getAttribute("data-title");
+        var desc = element.getAttribute("data-desc");
+        var link = element.getAttribute("data-link");
+
+        // Fill the modal with that data
+        document.getElementById("modal-img").src = imgParams;
+        document.getElementById("modal-title").innerText = title;
+        document.getElementById("modal-desc").innerText = desc;
+        document.getElementById("modal-link").href = link;
+
+        modal.style.display = "flex";
+    }
+
+    function closeModal() {
+        document.getElementById("certModal").style.display = "none";
+    }
+
+    // Close if user clicks outside the white box
+    window.onclick = function(event) {
+        var modal = document.getElementById("certModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+<script>
+    var reportForm = document.getElementById("report-form");
+    
+    reportForm.addEventListener("submit", async function(event) {
+        event.preventDefault(); // 1. STOP the redirect
+
+        var data = new FormData(event.target);
+        var message = document.getElementById("report-message");
+
+        // 2. Send data silently in the background
+        fetch(event.target.action, {
+            method: reportForm.method,
+            body: data,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                // 3. Success: Hide the form inputs and show the text
+                reportForm.style.display = "none";
+                message.style.display = "block";
+            } else {
+                alert("Oops! There was a problem submitting the report.");
+            }
+        });
+    });
+</script>
+</body>
+</html>
