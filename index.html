@@ -487,6 +487,72 @@ body.dark-mode .edu-year {
 body.dark-mode .grade {
     color: #aaa;
 }
+/* --- MORE BUTTON STYLING --- */
+.more-social-btn {
+    background: transparent;
+    border: 2px solid #333; /* Matches the black look of other icons */
+    border-radius: 8px;     /* Rounded corners */
+    cursor: pointer;
+    width: 40px;            /* Same size as your icons */
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    margin-left: 5px;       /* Spacing from the last icon */
+}
+
+.more-social-btn span {
+    font-size: 20px;        /* Size of the dots */
+    color: #333;
+    line-height: 0;         /* Fixes alignment */
+    margin-bottom: 5px;     /* Slight adjustment to center dots */
+}
+
+.more-social-btn:hover {
+    background-color: #3498db; /* Blue on hover */
+    border-color: #3498db;
+}
+
+.more-social-btn:hover span {
+    color: white;
+}
+
+/* --- HIDDEN SECTION STYLING --- */
+.extra-icons-wrapper {
+    display: none;          /* Hidden by default */
+    gap: 20px;              /* Spacing between new icons */
+    align-items: center;
+    margin-top: 15px;       /* Space below the first row */
+    opacity: 0;             /* For fade-in effect */
+    transition: opacity 0.4s ease;
+}
+
+/* This class is added by JS to show the icons */
+.extra-icons-wrapper.show {
+    display: flex;
+    flex-wrap: wrap;        /* Allows them to wrap if there are many */
+    opacity: 1;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Simple Fade In Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dark Mode Support for the button */
+body.dark-mode .more-social-btn {
+    border-color: #fff;
+}
+body.dark-mode .more-social-btn span {
+    color: #fff;
+}
+body.dark-mode .more-social-btn:hover {
+    background-color: #3498db;
+    border-color: #3498db;
+}
     </style>
 </head>
 <body>
@@ -735,11 +801,22 @@ body.dark-mode .grade {
                 </form>
 
                 <h3>Find me on social media:</h3>
-                <div class="icons-wrapper">
-                    <a href="https://www.linkedin.com/in/chanukyachintada/" class="social-icon"> <img src="linkedin.png" alt="LinkedIn"> </a>
-                    <a href="https://github.com/chanukyachintada06" class="social-icon"> <img src="github.png" alt="GitHub"> </a>
-                    <a href="https://x.com/Chanukyacom" class="social-icon"> <img src="x.png" alt="X"> </a>
-                </div>
+<div class="social-media-container">
+    <div class="icons-wrapper">
+        <a href="https://www.linkedin.com/in/chanukyachintada/" class="social-icon"> <img src="linkedin.png" alt="LinkedIn"> </a>
+        <a href="https://github.com/chanukyachintada06" class="social-icon"> <img src="github.png" alt="GitHub"> </a>
+        <a href="https://x.com/Chanukyacom" class="social-icon"> <img src="x.png" alt="X"> </a>
+
+        <button id="more-btn" class="more-social-btn" onclick="toggleSocials()">
+            <span>&#8226;&#8226;&#8226;</span> </button>
+    </div>
+
+    <div id="extra-socials" class="extra-icons-wrapper">
+        <a href="#" class="social-icon"> <img src="instagram.png" alt="Instagram"> </a>
+        <a href="#" class="social-icon"> <img src="discord.png" alt="Discord"> </a>
+        <a href="#" class="social-icon"> <img src="facebook.png" alt="Facebook"> </a>
+        </div>
+</div>
             </div>
         </section>
     </main>
@@ -871,7 +948,24 @@ body.dark-mode .grade {
         });
     });
 </script>
+	<script>/* SOCIAL MEDIA EXPAND LOGIC */
+function toggleSocials() {
+    const extraIcons = document.getElementById('extra-socials');
+    const btn = document.getElementById('more-btn');
+    
+    // Toggle the 'show' class
+    if (extraIcons.classList.contains('show')) {
+        extraIcons.classList.remove('show');
+        // Optional: Rotate button back or change color
+        btn.style.transform = "rotate(0deg)";
+    } else {
+        extraIcons.classList.add('show');
+        // Optional: Rotate button to indicate it's open
+        btn.style.transform = "rotate(90deg)";
+    }
+}</script>
 </body>
 
 </html>
+
 
